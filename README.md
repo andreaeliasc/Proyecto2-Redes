@@ -1,5 +1,5 @@
 # Project 2: Card Game 
-[![Build Status](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen)](https://travis-ci.org/joemccann/dillinger)
+[![Build Status](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen)](https://www.python.org/)
 
 ## Goals
 - 🌐 Apply TCP concepts to keep the internal states of different clients of an application synchronized. 🌐
