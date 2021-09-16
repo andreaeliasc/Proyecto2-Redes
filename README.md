@@ -2,8 +2,8 @@
 [![Build Status](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen)](https://travis-ci.org/joemccann/dillinger)
 
 ## Goals
-- 🌐 Apply TCP concepts to keep the internal states of different clients of an application synchronized.🌐
-- 😊 Develop an eye-catching card game. Make it easy to play.😊
+- 🌐 Apply TCP concepts to keep the internal states of different clients of an application synchronized. 🌐
+- 😊 Develop an eye-catching card game. Make it easy to play. 😊
 
 ## Features to develop
 
