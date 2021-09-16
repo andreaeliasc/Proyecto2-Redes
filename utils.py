@@ -1,5 +1,5 @@
 '''
-    File name: client.py
+    File name: utils.py
     Author: Andrea Elías, Diego Estrada & Luis Urbina
     Date created: 10/09/2021
     Python Version: 3.7
