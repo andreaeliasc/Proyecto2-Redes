@@ -14,3 +14,11 @@
 - Open chat
 - Players can decide a nickname when joining the game.
 - Has to be able to manage multiple rooms. Support simultaneous games.
+
+## Selected game was: Exploding Kittens 🐱💣💥
+Rules and instructions can be found here: https://www.explodingkittens.com/pages/rules-kittens-party
+
+## Members:
+Andrea Elías https://github.com/andreaeliasc
+Diego Estrada https://github.com/diegoestradaXO
+Luis Urbina https://github.com/virtualmonkey
