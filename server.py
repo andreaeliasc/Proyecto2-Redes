@@ -439,4 +439,65 @@ def b_usr(cs_sock, sen_name, msg, port):
                 'mensaje' : msg
             }
             client.send(pickle.dumps(objeto))
-            
+
+### IP and PORT are requested
+HOST = '0.0.0.0'
+PORT = int(input("\nIngrese el puerto del Server: "))
+c = PORT
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((HOST, PORT))
+s.listen(50)
+threads = list()
+menu = ""
+
+while(True):
+    removeList = list()
+    menu = ""
+    #print("Amount of rooms ",len(ROOMS.keys()))
+    roomAmount = len(ROOMS.keys())
+    menu = menu + "1. Create new room \n"
+    #print(menu)
+
+    
+    conn, addr = s.accept()
+    print ('Connected by', addr)
+
+    if (roomAmount != 0):
+        keys = list(map(itemgetter(0), ROOMS.items()))
+        for i in range(roomAmount):
+            print(startGame)
+            if (startGame[int(keys[i])] or ROOMS[int(keys[i])] > 4):
+                removeList.append(i)
+        if len(removeList) > 0:
+            for i in removeList:
+                print("Se quito", keys[i])
+                keys.pop(i)
+        roomAmount = len(keys)
+        for i in range(roomAmount):
+            menu = menu + str(i+2) + ". PORT: " + str(keys[i]) + "\n"
+    
+    data_string = pickle.dumps(menu)
+    conn.send(data_string)
+    data = conn.recv(4096)
+    data_variable = pickle.loads(data)
+    #print(data_variable)
+    if (data_variable == '1'):
+        c = c + 1
+        x = threading.Thread(target=thread_function1, args=(c,))
+        threads.append(x)
+        x.start()
+        ROOMS[c] = 0
+
+        check_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        """
+        print("Checking new room....")
+        while((check_socket.connect_ex((HOST, c))) == 0):
+            pass
+        """
+        str1 = c
+        startGame[c] = False
+    else:
+        str1 = str(keys[int(data_variable)-2])
+    data_string = pickle.dumps(str1)
+    conn.send(data_string)
+    #print("These are the rooms ",ROOMS)
