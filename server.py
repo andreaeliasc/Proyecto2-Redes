@@ -320,6 +320,104 @@ def game(cli_sock, port, username):
                 mensajeInicioP = pickle.dumps(mensajeInicio)
                 cli_sock.send(mensajeInicioP)
 
+        ### La opcion 6 es para poder ver las cartas que tiene el jugador
+        elif opcionJuego == 6:
+            if cli_sock in ROOMSplayersAlive[port]:
+                ### Solo se pueden hacer jugadas cuando la partida ha iniciado            
+                if startGame[port] == True:
+                    mensaje = ''
+                    contador = 0
+                    for carta in ROOMpilesPlayers[port][cli_sock]:
+                        if carta == CARDNO:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                            contador = contador + 1
+                        elif carta == CARDATACK:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                            contador = contador + 1
+                        elif carta == CARDSKIP:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                            contador = contador + 1
+                        elif carta == CARDFAVOR:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                            contador = contador + 1
+                        elif carta == CARDSHUFFLE:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                            contador = contador + 1
+                        elif carta == CARDSEEFUTURE:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                            contador = contador + 1
+                        elif carta == CARDDEFUSE:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                            contador = contador + 1
+                        elif carta == CARDGATOBARBA:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                            contador = contador + 1
+                        elif carta == CARDGATOARCOIRIS:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                            contador = contador + 1
+                        elif carta == CARDGATOSANDIA:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                            contador = contador + 1
+                        elif carta == CARDGATOTACO:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                            contador = contador + 1
+                        elif carta == CARDGATOPAPA:
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                            contador = contador + 1
+                    mensajeEstadoPropio = {
+                        'header' : 'estadoPropio',
+                        'mensaje' : '\nTus cartas son: '+mensaje+'\n'
+                    }
+                    mensajeEstadoPropioP = pickle.dumps(mensajeEstadoPropio)
+                    cli_sock.send(mensajeEstadoPropioP)
+                else:
+                    mensajeInicio = {
+                        'header' : 'fallo',
+                        'mensaje' : '\nEl juego aun no ha sido iniciado.'
+                    }
+                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                    cli_sock.send(mensajeInicioP) 
+            ### Estas fuera del juego
+            else:
+                mensajeInicio = {
+                    'header' : 'fuera',
+                    'mensaje' : '\nPerdiste, ya no puedes hacer acciones.'
+                }
+                mensajeInicioP = pickle.dumps(mensajeInicio)
+                cli_sock.send(mensajeInicioP)
+
+        ### La opcion 7 es para poder ver la lista de jugadores
+        elif opcionJuego == 7:
+            if cli_sock in ROOMSplayersAlive[port]:
+                ### Verificamos qwue la partida haya sido iniciada
+                if startGame[port] == True:
+                    mensaje = ''
+                    contador = 0
+                    for jugador in ROOMScon[port]:
+                        mensaje = mensaje + '\n' + str(contador) + '. User: ' + ROOMSusername[port][contador]
+                        contador = contador + 1
+                    mensajeEstadoPropio = {
+                        'header' : 'listaJugadores',
+                        'mensaje' : '\nLos jugadores son: '+mensaje+'\n'
+                    }
+                    mensajeEstadoPropioP = pickle.dumps(mensajeEstadoPropio)
+                    cli_sock.send(mensajeEstadoPropioP)
+                else:
+                    mensajeInicio = {
+                        'header' : 'fallo',
+                        'mensaje' : '\nEl juego aun no ha sido inciado.'
+                    }
+                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                    cli_sock.send(mensajeInicioP) 
+            ### Estas fuera del juego
+            else:
+                mensajeInicio = {
+                    'header' : 'fuera',
+                    'mensaje' : '\nPerdiste, ya no puedes hacer acciones.'
+                }
+                mensajeInicioP = pickle.dumps(mensajeInicio)
+                cli_sock.send(mensajeInicioP)
+
 
 
 
@@ -341,4 +439,4 @@ def b_usr(cs_sock, sen_name, msg, port):
                 'mensaje' : msg
             }
             client.send(pickle.dumps(objeto))
-
+            
