@@ -170,3 +170,73 @@ def send():
                 cli_sock.send(data_string)
             else:
                 print('La partida aun no ha sido iniciada.') 
+
+## Receive messages
+def receive():
+    global inicioPartida
+    while True:
+        responseP = cli_sock.recv(4096)
+        objeto = pickle.loads(responseP)
+
+        if objeto['header'] == 'chat':
+            sen_name = objeto['nombre']
+            data_string = objeto['mensaje']
+
+            print('\n' + str(sen_name) + ' > ' + str(data_string))
+            print('\n> ')
+
+        if objeto['header'] == 'inicio':
+            inicioPartida = True
+            print('\nEl juego ha sido iniciado')
+            print('\n> ')
+
+        if objeto['header'] == 'fallo':
+            mensajeFallo = objeto['mensaje']
+            print(mensajeFallo)
+            print('\n> ')
+
+        if objeto['header'] == 'turno':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'estado':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'estadoPropio':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'response':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'fuera':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'futuro':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'usoCarta':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'listaJugadores':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
+        if objeto['header'] == 'ganar':
+            mensajeTurno = objeto['mensaje']
+            print(mensajeTurno)
+            print('\n> ')
+
