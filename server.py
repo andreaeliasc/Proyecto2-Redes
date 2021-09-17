@@ -220,3 +220,42 @@ def game(cli_sock, port, username):
                 }
                 mensajeInicioP = pickle.dumps(mensajeInicio)
                 cli_sock.send(mensajeInicioP)
+
+        ### La opcion 2 es para poder utilizar el Chat (Broadcast) 
+        
+        elif opcionJuego == 2:
+            ### Verifica que la partida este iniciada para poder enviar mensajes
+            if startGame[port] == True:
+                broadcast_usr(username, cli_sock, objeto, port)
+            ### En caso no se haya iniciado una partida se imprime un mensaje de error al cliente para indicarle que la partida
+            ### aun no ha iniciado
+            else:
+                mensajeInicio = {
+                    'header' : 'fallo',
+                    'mensaje' : '\nEl juego aun no ha sido iniciado.'
+                }
+                mensajeInicioP = pickle.dumps(mensajeInicio)
+                cli_sock.send(mensajeInicioP)      
+
+
+
+
+def broadcast_usr(uname, cli_sock, objeto, port):
+    try:
+        data = objeto['mensaje']
+        if data:
+            print("{0} mando un mensaje".format(uname))
+            b_usr(cli_sock, uname, data, port)
+    except KeyError as e:
+        raise KeyError(str(e) + ' Error')
+
+def b_usr(cs_sock, sen_name, msg, port):
+    for client in ROOMScon[port]:
+        if client != cs_sock:
+            objeto = { 
+                'header' : 'chat',
+                'nombre' : sen_name,
+                'mensaje' : msg
+            }
+            client.send(pickle.dumps(objeto))
+
