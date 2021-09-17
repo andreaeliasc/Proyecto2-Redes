@@ -237,6 +237,89 @@ def game(cli_sock, port, username):
                 mensajeInicioP = pickle.dumps(mensajeInicio)
                 cli_sock.send(mensajeInicioP)      
 
+        ### La opcion 4 sirve para que el jugador pueda realizar el favor correspondiente
+        elif opcionJuego == 4:
+            if cli_sock in ROOMSplayersAlive[port]:
+                ### Solo se pueden hacer jugadas cuando la partida ha iniciado            
+                if startGame[port] == True:
+                    if giveCard[port] != False:
+                        if giveCard[port] == cli_sock:
+                            numeroCarta = objeto['carta']
+                            if numeroCarta > -1 or numeroCarta <= len(ROOMpilesPlayers[port][cli_sock]):
+                                carta = ROOMpilesPlayers[port][cli_sock].pop(numeroCarta)
+                                ROOMpilesPlayers[port][toGiveCard[port]].append(carta)
+                                toGiveCard[port] = False
+                                giveCard[port] = False
+                            else:
+                                mensajeInicio = {
+                                    'header' : 'fallo',
+                                    'mensaje' : '\nEl numero de carta no coincide con ninguna de las que tienes.'
+                                }
+                                mensajeInicioP = pickle.dumps(mensajeInicio)
+                                cli_sock.send(mensajeInicioP)                
+                        else:
+                            mensajeInicio = {
+                                'header' : 'fallo',
+                                'mensaje' : '\nNo eres el jugador elegido para hacer el favor.'
+                            }
+                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                            cli_sock.send(mensajeInicioP)        
+                    else:
+                        mensajeInicio = {
+                            'header' : 'fallo',
+                            'mensaje' : '\nNo han pedido un favor en esta ronda.'
+                        }
+                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                        cli_sock.send(mensajeInicioP) 
+                else:
+                    mensajeInicio = {
+                        'header' : 'fallo',
+                        'mensaje' : '\nEl juego aun no ha sido iniciado.'
+                    }
+                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                    cli_sock.send(mensajeInicioP)
+            ### Estas fuera del juego
+            else:
+                mensajeInicio = {
+                    'header' : 'fuera',
+                    'mensaje' : '\nPerdiste, ya no puedes hacer acciones.'
+                }
+                mensajeInicioP = pickle.dumps(mensajeInicio)
+                cli_sock.send(mensajeInicioP)
+ 
+        ### La opcion 5 es para poder ver las cantidades de cartas en los mazos del juego
+        elif opcionJuego == 5:
+            if cli_sock in ROOMSplayersAlive[port]:
+                ### Solo se pueden hacer jugadas cuando la partida ha iniciado            
+                if startGame[port] == True:
+                    mensaje = ''
+                    contador = 0
+                    for jugador in ROOMScon[port]:
+                        mensaje = mensaje + '\nCantidad de cartas del User ' + ROOMSusername[port][contador] + ': ' + str(len(ROOMpilesPlayers[port][jugador]))
+                        contador = contador + 1
+                    mensaje = mensaje + '\nCantidad de cartas en el Mazo: ' + str(len(ROOMpiles[port]))
+                    mensajeEstado = {
+                        'header' : 'estado',
+                        'mensaje' : '\nEstado del juego: '+mensaje+'\n'
+                    }
+                    mensajeEstadoP = pickle.dumps(mensajeEstado)
+                    cli_sock.send(mensajeEstadoP)
+                else:
+                    mensajeInicio = {
+                        'header' : 'fallo',
+                        'mensaje' : '\nEl juego aun no ha sido iniciado.'
+                    }
+                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                    cli_sock.send(mensajeInicioP)
+            ### Estas fuera del juego
+            else:
+                mensajeInicio = {
+                    'header' : 'fuera',
+                    'mensaje' : '\nPerdiste, ya no puedes hacer acciones.'
+                }
+                mensajeInicioP = pickle.dumps(mensajeInicio)
+                cli_sock.send(mensajeInicioP)
+
 
 
 
