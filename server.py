@@ -235,7 +235,655 @@ def game(cli_sock, port, username):
                     'mensaje' : '\nEl juego aun no ha sido iniciado.'
                 }
                 mensajeInicioP = pickle.dumps(mensajeInicio)
-                cli_sock.send(mensajeInicioP)      
+                cli_sock.send(mensajeInicioP)   
+
+        ### La opcion 3 es para poder realizar una jugada cuando es el turno del cliente
+        elif opcionJuego == 3:
+            if cli_sock in ROOMSplayersAlive[port]:
+                ### Solo se pueden hacer jugadas cuando la partida ha iniciado            
+                if startGame[port] == True:
+                    if giveCard[port] == False:
+                        if cli_sock == ROOMScon[port][ROOMSturnPlayers[port][0]]:
+                            print("Jugando tu turno")
+                            ### Usar una carta
+                            if objeto['jugada'] == 1:
+                                cartaPosicion = objeto['carta']
+                                if cartaPosicion < len(ROOMpilesPlayers[port][cli_sock]) and cartaPosicion > -1:
+                                    cartaJugada = ROOMpilesPlayers[port][cli_sock].pop(cartaPosicion)
+                                    if cartaJugada == CARDNO:
+                                        if ROOMSpreviousTurnPlayers[port]:
+                                            mensajeTurno = {
+                                                'header' : 'usoCarta',
+                                                'mensaje' : '\nEl jugador uso la carta NO.'
+                                            }
+                                            mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                            for client in ROOMScon[port]:
+                                                client.send(mensajeTurnoP) 
+
+                                            ROOMSturnPlayers[port][0] = ROOMSpreviousTurnPlayers[port][0]
+                                            mensajeTurno = {
+                                                'header' : 'turno',
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                            for client in ROOMScon[port]:
+                                                client.send(mensajeTurnoP) 
+                                            ### Al poner un NO se quitan los ATACK y SKIP y no se podra hacer NO al NO
+                                            ROOMSpreviousTurnPlayers[port] = []
+                                            ROOMSpostTurnPlayers[port] = []
+                                        else:
+                                            ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                            mensajeInicio = {
+                                                'header' : 'fallo',
+                                                'mensaje' : '\nNo es posible jugar una carta NO en tu turno.'
+                                            }
+                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                            cli_sock.send(mensajeInicioP)   
+                                    elif cartaJugada == CARDATACK:
+                                        ROOMSpreviousTurnPlayers[port] = []
+                                        ROOMSpostTurnPlayers[port] = []
+                                        ROOMSpreviousTurnPlayers[port].append(ROOMScon[port].index(cli_sock))
+
+                                        ### Buscar quien es el siguiente
+                                        ### Se avisa de quien es el siguiente turno
+                                        ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                        ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                        if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                            ROOMSturnPlayers[port][0] = 0
+
+                                        for jugador in range(len(ROOMScon[port])):
+                                            if ROOMScon[port][ROOMSturnPlayers[port][0]] not in ROOMSplayersAlive[port]:
+                                                ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                                ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                                if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                    ROOMSturnPlayers[port][0] = 0
+                                                
+                                            else:
+                                                ROOMSpostTurnPlayers[port].append(ROOMSturnPlayers[port][0])
+                                                break 
+                                            
+                                        ### Notificamos quien es el proximo en jugar
+                                        mensajeTurno = {
+                                            'header' : 'turno',
+                                            'mensaje' : '\nEs el turno del User ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                        }
+                                        mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                        for client in ROOMScon[port]:
+                                            client.send(mensajeTurnoP) 
+
+                                    elif cartaJugada == CARDSKIP:
+                                        ROOMSpreviousTurnPlayers[port] = [ROOMScon[port].index(cli_sock)]
+                                        mensajeTurno = {
+                                            'header' : 'usoCarta',
+                                            'mensaje' : '\nEl jugador uso la carta SKIP.'
+                                        }
+                                        mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                        for client in ROOMScon[port]:
+                                            client.send(mensajeTurnoP) 
+
+                                        mensajeTurnoP = ''
+                                        ### Se revisa si el jugador debe repetir turno
+                                        if ROOMSpostTurnPlayers[port]:
+                                            ROOMSturnPlayers[port] = [ROOMScon[port].index(cli_sock)]
+                                            mensajeTurno = {
+                                                'header' : 'turno',
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            mensajeTurnoP = pickle.dumps(mensajeTurno)
+
+                                            ### Al terminar un turno normal se quita el previous y el post TURN
+                                            ROOMSpostTurnPlayers[port] = []
+                                        else:
+                                            ### Se avisa de quien es el siguiente turno
+                                            ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                            ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                            if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                ROOMSturnPlayers[port][0] = 0
+
+                                            for jugador in range(len(ROOMScon[port])):
+                                                if ROOMScon[port][ROOMSturnPlayers[port][0]] not in ROOMSplayersAlive[port]:
+                                                    ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                                    ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                                    if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                        ROOMSturnPlayers[port][0] = 0
+                                                    
+                                                else:
+                                                    break 
+                                                
+                                            ### Notificamos quien es el proximo en jugar
+                                            mensajeTurno = {
+                                                'header' : 'turno',
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            ### Al terminar un turno normal se quita el previous y el post TURN
+                                            mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                            ROOMSpostTurnPlayers[port] = []
+
+                                        for client in ROOMScon[port]:
+                                            client.send(mensajeTurnoP)
+
+                                    elif cartaJugada == CARDFAVOR:
+                                        indexUsuario = objeto['favor']
+                                        if indexUsuario > -1 and indexUsuario < len(ROOMScon[port]):
+                                            clientePedir = ROOMScon[port][indexUsuario]
+                                            if clientePedir in ROOMSplayersAlive[port]:
+                                                toGiveCard[port] = cli_sock
+                                                giveCard[port] = clientePedir
+                                                mensajeTurno = {
+                                                    'header' : 'usoCarta',
+                                                    'mensaje' : '\nEl jugador uso la carta FAVOR al User: '+ ROOMSusername[port][indexUsuario]
+                                                }
+                                                mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                                for client in ROOMScon[port]:
+                                                    client.send(mensajeTurnoP) 
+                                            else:
+                                                mensajeInicio = {
+                                                    'header' : 'fallo',
+                                                    'mensaje' : '\nEl usuario al que le pediste ya no esta jugando.'
+                                                }
+                                                mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                cli_sock.send(mensajeInicioP) 
+                                        else:
+                                            mensajeInicio = {
+                                                'header' : 'fallo',
+                                                'mensaje' : '\nOpcion no valida de usuario a pedir carta, repita.'
+                                            }
+                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                            cli_sock.send(mensajeInicioP)   
+
+                                    elif cartaJugada == CARDSHUFFLE:
+                                        random.shuffle(ROOMpiles[port])
+                                        mensajeTurno = {
+                                            'header' : 'usoCarta',
+                                            'mensaje' : '\nEl jugador uso la carta SHUFFLE.'
+                                        }
+                                        mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                        for client in ROOMScon[port]:
+                                            client.send(mensajeTurnoP) 
+
+                                    elif cartaJugada == CARDSEEFUTURE:
+                                        mensaje = ''
+                                        contador = 0
+                                        primeraCarta = ''
+                                        segundaCarta = ''
+                                        terceraCarta = ''
+
+                                        if len(ROOMpiles[port]) >= 3:
+                                            primeraCarta = ROOMpiles[port].pop()
+                                            segundaCarta = ROOMpiles[port].pop()
+                                            terceraCarta = ROOMpiles[port].pop()
+                                        elif len(ROOMpiles[port]) == 2:
+                                            primeraCarta = ROOMpiles[port].pop()
+                                            segundaCarta = ROOMpiles[port].pop()
+                                        elif len(ROOMpiles[port]) == 1:
+                                            primeraCarta = ROOMpiles[port].pop()
+
+                                        if primeraCarta == CARDNO:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDATACK:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDSKIP:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDFAVOR:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDSHUFFLE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDSEEFUTURE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDDEFUSE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDGATOBARBA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDGATOARCOIRIS:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDGATOSANDIA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDGATOTACO:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDGATOPAPA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                                            contador = contador + 1
+                                        elif primeraCarta == CARDBOMB:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA'
+                                            contador = contador + 1
+                                        else:
+                                            contador = contador + 1
+
+                                        if segundaCarta == CARDNO:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDATACK:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDSKIP:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDFAVOR:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDSHUFFLE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDSEEFUTURE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDDEFUSE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDGATOBARBA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDGATOARCOIRIS:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDGATOSANDIA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDGATOTACO:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDGATOPAPA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                                            contador = contador + 1
+                                        elif segundaCarta == CARDBOMB:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA'
+                                            contador = contador + 1
+                                        else:
+                                            contador = contador + 1
+
+                                        if terceraCarta == CARDNO:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDATACK:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDSKIP:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDFAVOR:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDSHUFFLE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDSEEFUTURE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDDEFUSE:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDGATOBARBA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDGATOARCOIRIS:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDGATOSANDIA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDGATOTACO:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDGATOPAPA:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                                            contador = contador + 1
+                                        elif terceraCarta == CARDBOMB:
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA'
+                                            contador = contador + 1
+                                        else:
+                                            contador = contador + 1
+                                        
+                                        if terceraCarta != '':
+                                            ROOMpiles[port].append(terceraCarta)
+                                        if segundaCarta != '':
+                                            ROOMpiles[port].append(segundaCarta)
+                                        if primeraCarta != '':
+                                            ROOMpiles[port].append(primeraCarta)
+
+                                        mensajeInicio = {
+                                            'header' : 'futuro',
+                                            'mensaje' : '\nLas cartas son: \n' + mensaje + '.'
+                                        }
+                                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                                        cli_sock.send(mensajeInicioP)
+
+                                    elif cartaJugada == CARDDEFUSE:
+                                        ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                        mensajeInicio = {
+                                            'header' : 'fallo',
+                                            'mensaje' : '\nNo es posible jugar una carta DEFUSE en tu turno.'
+                                        }
+                                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                                        cli_sock.send(mensajeInicioP)
+
+                                    else:
+                                        indexUsuario = objeto['favor']
+                                        if indexUsuario > -1 and indexUsuario < len(ROOMScon[port]):
+                                            clientePedir = ROOMScon[port][indexUsuario]
+                                            if clientePedir in ROOMSplayersAlive[port]:
+                                                opcionCantidadGatos = objeto['gatos']
+                                                if opcionCantidadGatos == 1:
+                                                    if ROOMpilesPlayers[port][cli_sock].count(cartaJugada) >= 1:
+                                                        ### Revisamos si el indice que mando para robar
+                                                        cartaPedir = objeto['cartaPedir'] - 1
+                                                        if cartaPedir > -1 and cartaPedir < len(ROOMpilesPlayers[port][clientePedir]):
+                                                            ROOMpilesPlayers[port][cli_sock].remove(cartaJugada)
+                                                            cartaQuitar = ROOMpilesPlayers[port][clientePedir][cartaPedir]
+                                                            ROOMpilesPlayers[port][clientePedir].remove(cartaQuitar)
+                                                            ROOMpilesPlayers[port][cli_sock].append(cartaQuitar)
+                                                            mensajeInicio = {
+                                                                'header' : 'fallo',
+                                                                'mensaje' : '\nRobaste la carta exitosamente.'
+                                                            }
+                                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                            cli_sock.send(mensajeInicioP) 
+                                                            mensajeInicio = {
+                                                                'header' : 'fallo',
+                                                                'mensaje' : '\nTe robaron una carta.'
+                                                            }
+                                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                            clientePedir.send(mensajeInicioP)
+                                                        else:
+                                                            ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                                            mensajeInicio = {
+                                                                'header' : 'fallo',
+                                                                'mensaje' : '\nEl indice de la carta no es correcto, repita.'
+                                                            }
+                                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                            cli_sock.send(mensajeInicioP) 
+                                                    else:
+                                                        ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                                        mensajeInicio = {
+                                                            'header' : 'fallo',
+                                                            'mensaje' : '\nNo tienes la cantidad de gatos iguales suficiente, repite.'
+                                                        }
+                                                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                        cli_sock.send(mensajeInicioP)       
+                                                elif opcionCantidadGatos == 2:
+                                                    if ROOMpilesPlayers[port][cli_sock].count(cartaJugada) >= 2:
+                                                        ROOMpilesPlayers[port][cli_sock].remove(cartaJugada)
+                                                        ROOMpilesPlayers[port][cli_sock].remove(cartaJugada)
+                                                        ### Revisamos la carta que quiere robar
+                                                        cartaPedir = objeto['cartaPedir']
+                                                        if cartaPedir > 7:
+                                                            cartaPedir = cartaPedir + 1
+                                                        if cartaPedir in ROOMpilesPlayers[port][clientePedir]:
+                                                            ROOMpilesPlayers[port][clientePedir].remove(cartaPedir)
+                                                            ROOMpilesPlayers[port][cli_sock].append(cartaPedir)
+                                                            mensajeInicio = {
+                                                                'header' : 'fallo',
+                                                                'mensaje' : '\nRobaste la carta exitosamente.'
+                                                            }
+                                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                            cli_sock.send(mensajeInicioP) 
+                                                            mensajeInicio = {
+                                                                'header' : 'fallo',
+                                                                'mensaje' : '\nTe robaron una carta.'
+                                                            }
+                                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                            clientePedir.send(mensajeInicioP) 
+                                                        else:
+                                                            mensajeInicio = {
+                                                                'header' : 'fallo',
+                                                                'mensaje' : '\nEl jugador no tenia la carta que pediste, y perdiste tus cartas.'
+                                                            }
+                                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                            cli_sock.send(mensajeInicioP)   
+                                                    else:
+                                                        ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                                        mensajeInicio = {
+                                                            'header' : 'fallo',
+                                                            'mensaje' : '\nNo tienes la cantidad de gatos iguales suficiente, repite.'
+                                                        }
+                                                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                        cli_sock.send(mensajeInicioP)         
+                                                else:
+                                                    ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                                    mensajeInicio = {
+                                                        'header' : 'fallo',
+                                                        'mensaje' : '\nNo elegiste una opcion correcta para cuantos gatos usar, repite.'
+                                                    }
+                                                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                    cli_sock.send(mensajeInicioP) 
+                                            else:
+                                                ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                                mensajeInicio = {
+                                                    'header' : 'fallo',
+                                                    'mensaje' : '\nEl usuario al que le pediste ya no esta jugando.'
+                                                }
+                                                mensajeInicioP = pickle.dumps(mensajeInicio)
+                                                cli_sock.send(mensajeInicioP) 
+                                        else:
+                                            ROOMpilesPlayers[port][cli_sock].append(cartaJugada)
+                                            mensajeInicio = {
+                                                'header' : 'fallo',
+                                                'mensaje' : '\nOpcion no valida de usuario a pedir carta, repita.'
+                                            }
+                                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                                            cli_sock.send(mensajeInicioP)
+
+                                else: 
+                                    mensajeInicio = {
+                                        'header' : 'fallo',
+                                        'mensaje' : '\nOpcion no valida de carta, repita.'
+                                    }
+                                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                                    cli_sock.send(mensajeInicioP)    
+                            ### Tomar una carta
+                            elif objeto['jugada'] == 2:
+                                ### Sacar la carta
+                                cartaNueva = ROOMpiles[port].pop()
+                                ### Revisar si es bomba o no
+                                if cartaNueva != 8:
+                                    ### Agregar la carta al mazo del jugador
+                                    ROOMpilesPlayers[port][cli_sock].append(cartaNueva)
+                                    mensajeInicio = {
+                                        'header' : 'response',
+                                        'mensaje' : '\nTermino tu turno.'
+                                    }
+                                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                                    cli_sock.send(mensajeInicioP)
+                                    mensajeTurnoP = ''
+                                    ### Se revisa si el jugador debe repetir turno
+                                    if ROOMSpostTurnPlayers[port]:
+                                        ### Se aplica el turno nuevamente
+                                        ROOMSturnPlayers[port] = [ROOMScon[port].index(cli_sock)]
+                                        mensajeTurno = {
+                                            'header' : 'turno',
+                                            'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                        }
+                                        ### Al terminar un turno normal se quita el previous y el post TURN
+                                        ROOMSpreviousTurnPlayers[port] = []
+                                        ROOMSpostTurnPlayers[port] = []
+                                    else:
+                                        ### Se avisa de quien es el siguiente turno
+                                        ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                        ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                        if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                            ROOMSturnPlayers[port][0] = 0
+
+                                        for jugador in range(len(ROOMScon[port])):
+                                            if ROOMScon[port][ROOMSturnPlayers[port][0]] not in ROOMSplayersAlive[port]:
+                                                ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                                ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                                if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                    ROOMSturnPlayers[port][0] = 0
+                                                
+                                            else:
+                                                break 
+                                            
+                                        ### Notificamos quien es el proximo en jugar
+                                        mensajeTurno = {
+                                            'header' : 'turno',
+                                            'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                        }
+                                        ### Al terminar un turno normal se quita el previous y el post TURN
+                                        ROOMSpreviousTurnPlayers[port] = []
+                                        ROOMSpostTurnPlayers[port] = []
+
+                                    mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                    for client in ROOMScon[port]:
+                                        client.send(mensajeTurnoP)         
+                                else:
+                                    ### Revisar si tiene defuse
+                                    if CARDDEFUSE in ROOMpilesPlayers[port][cli_sock]:
+                                        ### Se le quita un Defuse
+                                        ROOMpilesPlayers[port][cli_sock].remove(CARDDEFUSE)
+                                        ROOMpiles[port].append(cartaNueva)
+                                        random.shuffle(ROOMpiles[port])
+                                        ### Mensaje terminar turno
+                                        mensajeInicio = {
+                                            'header' : 'response',
+                                            'mensaje' : '\nTe salio bomba pero tenias Defuse\nTermino tu turno.'
+                                        }
+                                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                                        cli_sock.send(mensajeInicioP)  
+
+                                        mensajeTurnoP = ''
+                                        ### Se revisa si el jugador debe repetir turno
+                                        if ROOMSpostTurnPlayers[port]:
+                                            ROOMSturnPlayers[port] = [ROOMScon[port].index(cli_sock)]
+                                            mensajeTurno = {
+                                                'header' : 'turno',
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            ### Al terminar un turno normal se quita el previous y el post TURN
+                                            ROOMSpreviousTurnPlayers[port] = []
+                                            ROOMSpostTurnPlayers[port] = []
+                                        else:
+                                            ### Se avisa de quien es el siguiente turno
+                                            ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                            ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                            if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                ROOMSturnPlayers[port][0] = 0
+
+                                            for jugador in range(len(ROOMScon[port])):
+                                                if ROOMScon[port][ROOMSturnPlayers[port][0]] not in ROOMSplayersAlive[port]:
+                                                    ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                                    ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                                    if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                        ROOMSturnPlayers[port][0] = 0
+                                                    
+                                                else:
+                                                    break 
+                                                
+                                            ### Notificamos quien es el proximo en jugar
+                                            mensajeTurno = {
+                                                'header' : 'turno',
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            ### Al terminar un turno normal se quita el previous y el post TURN
+                                            ROOMSpreviousTurnPlayers[port] = []
+                                            ROOMSpostTurnPlayers[port] = []
+
+                                        mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                        for client in ROOMScon[port]:
+                                            client.send(mensajeTurnoP) 
+
+                                    else:
+                                        ### El jugador esta fuera
+                                        ROOMSplayersAlive[port].remove(cli_sock)
+
+                                        ### Se le avisa a todos que ya esta afuera
+                                        mensajeInicio = {
+                                            'header' : 'fuera',
+                                            'mensaje' : '\nEl ' + str(username) + ' ha sido eliminado.\n'
+                                        }
+                                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                                        for client in ROOMScon[port]:
+                                            client.send(mensajeInicioP) 
+
+                                        ### Si habia un atack o skip se quitan
+                                        ROOMSpreviousTurnPlayers[port] = []
+                                        ROOMSpostTurnPlayers[port] = []
+
+                                        ### Se avisa de quien es el siguiente turno
+                                        ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                        ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                        if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                            ROOMSturnPlayers[port][0] = 0
+
+                                        for jugador in range(len(ROOMScon[port])):
+                                            if ROOMScon[port][ROOMSturnPlayers[port][0]] not in ROOMSplayersAlive[port]:
+                                                ROOMSturnPlayers[port][0] = ROOMSturnPlayers[port][0] + 1
+                                                ### Revisamos si el jugar siguiente esta en la lista de vivos
+                                                if ROOMSturnPlayers[port][0] >= len(ROOMScon[port]):
+                                                    ROOMSturnPlayers[port][0] = 0
+                                                
+                                            else:
+                                                break
+
+                                        ### Se revisa si solo hay un jugador para terminar la partida
+                                        if len(ROOMSplayersAlive[port]) == 1:
+                                            ### Notificamoso quien es el proximo en jugar
+                                            mensajeTurno = {
+                                                'header' : 'ganar',
+                                                'mensaje' : '\nEl ganador es el User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                            for client in ROOMScon[port]:
+                                                client.send(mensajeTurnoP)  
+                                        ### En caso que no, entonces se notifica el turno del siguiente
+                                        else:
+                                            ### Notificamoso quien es el proximo en jugar
+                                            mensajeTurno = {
+                                                'header' : 'turno',
+                                                'mensaje' : '\nEs el turno del User: ' + ROOMSusername[port][ROOMSturnPlayers[port][0]]
+                                            }
+                                            mensajeTurnoP = pickle.dumps(mensajeTurno)
+                                            for client in ROOMScon[port]:
+                                                client.send(mensajeTurnoP)
+
+                            else:
+                                mensajeInicio = {
+                                    'header' : 'fallo',
+                                    'mensaje' : '\nOpcion no valida, repita.'
+                                }
+                                mensajeInicioP = pickle.dumps(mensajeInicio)
+                                cli_sock.send(mensajeInicioP)              
+                        else:
+                            mensajeInicio = {
+                                'header' : 'fallo',
+                                'mensaje' : '\nNo es tu turno.'
+                            }
+                            mensajeInicioP = pickle.dumps(mensajeInicio)
+                            cli_sock.send(mensajeInicioP)  
+                    else:
+                        mensajeInicio = {
+                            'header' : 'fallo',
+                            'mensaje' : '\nEn este momento no puedes hacer jugadas porque un jugador debe hacer un favor.'
+                        }
+                        mensajeInicioP = pickle.dumps(mensajeInicio)
+                        cli_sock.send(mensajeInicioP)  
+
+                ### Si no se ha iniciado mandamos un mensaje de error al cliente para indicarle que la partida
+                ### aun no ha iniciado
+                else:
+                    mensajeInicio = {
+                        'header' : 'fallo',
+                        'mensaje' : '\nEl juego aun no ha sido iniciado.'
+                    }
+                    mensajeInicioP = pickle.dumps(mensajeInicio)
+                    cli_sock.send(mensajeInicioP)    
+            ### Estas fuera del juego
+            else:
+                mensajeInicio = {
+                    'header' : 'fuera',
+                    'mensaje' : '\nPerdiste, ya no puedes hacer acciones.'
+                }
+                mensajeInicioP = pickle.dumps(mensajeInicio)
+                cli_sock.send(mensajeInicioP)   
 
         ### La opcion 4 sirve para que el jugador pueda realizar el favor correspondiente
         elif opcionJuego == 4:
