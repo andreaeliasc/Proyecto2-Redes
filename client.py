@@ -346,3 +346,37 @@ cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ### Nos conectamos al servidor que se encarga de crear las salas
 ip_address = 'localhost'
 port = 50001
+### Se solicita que se ingresen los parametros de IP y PORT del servidor
+ip_address = input("Bienvenido a Exploding Kittens Server\nIngrese la IP del host: ")
+port = int(input("\nIngrese el puerto del Server: "))
+### Conexion al server creador de salas 
+cli_sock.connect((ip_address, port))
+data = cli_sock.recv(4096)
+data_variable = pickle.loads(data)
+### Se solicita que se determine si se quiere crear una nueva sala o si se desea unir a una
+print("Bienvenido a Exploding Kittens\nElija una de las siguientes opciones \n")
+opcion1 = input(data_variable)
+data_string = pickle.dumps(opcion1)
+cli_sock.send(data_string)
+### Recibimos el puerto para conectarnos de parte del servidor principal
+data = cli_sock.recv(4096)
+data_variable = pickle.loads(data)
+cli_sock.close()
+### Proceso para unirse a una sala
+### Nos conectamos al servidor sala
+cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+print("Conectandose en el puerto: ", data_variable)
+serverResponseRoom = int(data_variable)
+print(serverResponseRoom)
+
+cli_sock.connect((ip_address, serverResponseRoom))
+print("Conected")
+username = input("Ingrese su username: ")
+data_variable = pickle.dumps(username)
+cli_sock.send(data_variable)
+thread_send = threading.Thread(target = send)
+thread_send.start()
+
+thread_receive = threading.Thread(target = receive)
+thread_receive.start()
+

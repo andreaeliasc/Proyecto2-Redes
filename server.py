@@ -1149,3 +1149,6 @@ while(True):
     data_string = pickle.dumps(str1)
     conn.send(data_string)
     #print("These are the rooms ",ROOMS)
+
+for index, thread in enumerate(threads):
+    thread.join
