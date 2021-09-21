@@ -419,127 +419,127 @@ def game(cli_sock, port, username):
                                             primeraCarta = ROOMpiles[port].pop()
 
                                         if primeraCarta == CARDNO:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO ❌'
                                             contador = contador + 1
                                         elif primeraCarta == CARDATACK:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATTACK 👊🏼'
                                             contador = contador + 1
                                         elif primeraCarta == CARDSKIP:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP ⏩'
                                             contador = contador + 1
                                         elif primeraCarta == CARDFAVOR:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR 🙇🏼‍♀️'
                                             contador = contador + 1
                                         elif primeraCarta == CARDSHUFFLE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE 🔀'
                                             contador = contador + 1
                                         elif primeraCarta == CARDSEEFUTURE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE 🔮'
                                             contador = contador + 1
                                         elif primeraCarta == CARDDEFUSE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE 💣'
                                             contador = contador + 1
                                         elif primeraCarta == CARDGATOBARBA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA 🧔'
                                             contador = contador + 1
                                         elif primeraCarta == CARDGATOARCOIRIS:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS 🌈'
                                             contador = contador + 1
                                         elif primeraCarta == CARDGATOSANDIA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA 🍉'
                                             contador = contador + 1
                                         elif primeraCarta == CARDGATOTACO:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO 🌮'
                                             contador = contador + 1
                                         elif primeraCarta == CARDGATOPAPA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA 🥔'
                                             contador = contador + 1
                                         elif primeraCarta == CARDBOMB:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA 💥'
                                             contador = contador + 1
                                         else:
                                             contador = contador + 1
 
                                         if segundaCarta == CARDNO:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO ❌'
                                             contador = contador + 1
                                         elif segundaCarta == CARDATACK:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATTACK 👊🏽'
                                             contador = contador + 1
                                         elif segundaCarta == CARDSKIP:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP ⏩'
                                             contador = contador + 1
                                         elif segundaCarta == CARDFAVOR:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR 🙇🏼‍♀️'
                                             contador = contador + 1
                                         elif segundaCarta == CARDSHUFFLE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE 🔀'
                                             contador = contador + 1
                                         elif segundaCarta == CARDSEEFUTURE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE 🔮'
                                             contador = contador + 1
                                         elif segundaCarta == CARDDEFUSE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE 💣'
                                             contador = contador + 1
                                         elif segundaCarta == CARDGATOBARBA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA 🧔🏽'
                                             contador = contador + 1
                                         elif segundaCarta == CARDGATOARCOIRIS:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS 🌈'
                                             contador = contador + 1
                                         elif segundaCarta == CARDGATOSANDIA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA 🍉'
                                             contador = contador + 1
                                         elif segundaCarta == CARDGATOTACO:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO 🌮'
                                             contador = contador + 1
                                         elif segundaCarta == CARDGATOPAPA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA 🥔'
                                             contador = contador + 1
                                         elif segundaCarta == CARDBOMB:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA 💥'
                                             contador = contador + 1
                                         else:
                                             contador = contador + 1
 
                                         if terceraCarta == CARDNO:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO ❌'
                                             contador = contador + 1
                                         elif terceraCarta == CARDATACK:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATTACK 👊🏽'
                                             contador = contador + 1
                                         elif terceraCarta == CARDSKIP:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP ⏩'
                                             contador = contador + 1
                                         elif terceraCarta == CARDFAVOR:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR 🙇🏼‍♀️'
                                             contador = contador + 1
                                         elif terceraCarta == CARDSHUFFLE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE 🔀'
                                             contador = contador + 1
                                         elif terceraCarta == CARDSEEFUTURE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE 🔮'
                                             contador = contador + 1
                                         elif terceraCarta == CARDDEFUSE:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE 💣'
                                             contador = contador + 1
                                         elif terceraCarta == CARDGATOBARBA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA 🧔🏽'
                                             contador = contador + 1
                                         elif terceraCarta == CARDGATOARCOIRIS:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS 🌈'
                                             contador = contador + 1
                                         elif terceraCarta == CARDGATOSANDIA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA 🍉'
                                             contador = contador + 1
                                         elif terceraCarta == CARDGATOTACO:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO 🌮'
                                             contador = contador + 1
                                         elif terceraCarta == CARDGATOPAPA:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA 🥔'
                                             contador = contador + 1
                                         elif terceraCarta == CARDBOMB:
-                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA'
+                                            mensaje = mensaje + '\n' + str(contador) + '. Carta BOMBA 💥'
                                             contador = contador + 1
                                         else:
                                             contador = contador + 1
@@ -977,40 +977,40 @@ def game(cli_sock, port, username):
                     contador = 0
                     for carta in ROOMpilesPlayers[port][cli_sock]:
                         if carta == CARDNO:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta NO ❌'
                             contador = contador + 1
                         elif carta == CARDATACK:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATACK'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta ATTACK 👊🏽'
                             contador = contador + 1
                         elif carta == CARDSKIP:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta SKIP ⏭'
                             contador = contador + 1
                         elif carta == CARDFAVOR:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta FAVOR 🙏🏽'
                             contador = contador + 1
                         elif carta == CARDSHUFFLE:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta SHUFFLE 🔀'
                             contador = contador + 1
                         elif carta == CARDSEEFUTURE:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta SEE THE FUTURE 🔮'
                             contador = contador + 1
                         elif carta == CARDDEFUSE:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta DEFUSE 💣'
                             contador = contador + 1
                         elif carta == CARDGATOBARBA:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO BARBA 🧔🏽'
                             contador = contador + 1
                         elif carta == CARDGATOARCOIRIS:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO ARCOIRIS 🌈'
                             contador = contador + 1
                         elif carta == CARDGATOSANDIA:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO SANDIA 🍉'
                             contador = contador + 1
                         elif carta == CARDGATOTACO:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO TACO 🌮'
                             contador = contador + 1
                         elif carta == CARDGATOPAPA:
-                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA'
+                            mensaje = mensaje + '\n' + str(contador) + '. Carta GATO PAPA 🥔'
                             contador = contador + 1
                     mensajeEstadoPropio = {
                         'header' : 'estadoPropio',

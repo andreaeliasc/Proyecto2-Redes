@@ -110,8 +110,8 @@ def send():
                             cartaPedir = int(input('\nIngrese la posicion de la carta quitar (desde posicion 1 al numero de cartas del jugador): '))
                         elif gatos == 2:
                             print('''
-                                \n1. Carta NO
-                                \n2. Carta ATACK
+                                \n1. Carta NO 
+                                \n2. Carta ATTACK
                                 \n3. Carta SKIP
                                 \n4. Carta FAVOR
                                 \n5. Carta SHUFFLE
