@@ -18,6 +18,33 @@
 ## Selected game was: Exploding Kittens 🐱💣💥
 Rules and instructions can be found here: https://www.explodingkittens.com/pages/rules-kittens-party
 
+## Requirements
+The tools used for development and use were:
+```sh
+Python 3.7+
+socket
+threading
+os
+random
+operator
+```
+You can install them by running
+```sh
+pip install -r requirements.txt 
+```
+
+## Getting Started
+```sh
+python server.py
+```
+In this program you type the port, for example 5000.
+```sh
+python client.py
+```
+In the client program you must use 'localhost' as the ip address and type the port used in the server program, in this case 5000.
+
+And now you can start playing the game!!! Have fun! 😼😼
+
 ## Members:
 Andrea Elías https://github.com/andreaeliasc
 Diego Estrada https://github.com/diegoestradaXO
