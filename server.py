@@ -745,7 +745,7 @@ def game(cli_sock, port, username):
                                         ### Mensaje terminar turno
                                         mensajeInicio = {
                                             'header' : 'response',
-                                            'mensaje' : '\nTe salio bomba pero tenias Defuse\nTermino tu turno.'
+                                            'mensaje' : '\n¡BOMBAAAAAA! Pero hey! Te has salvado porque tienes una carta DEFUSE\nTermino tu turno.'
                                         }
                                         mensajeInicioP = pickle.dumps(mensajeInicio)
                                         cli_sock.send(mensajeInicioP)  
@@ -798,7 +798,7 @@ def game(cli_sock, port, username):
                                         ### Se le avisa a todos que ya esta afuera
                                         mensajeInicio = {
                                             'header' : 'fuera',
-                                            'mensaje' : '\nEl ' + str(username) + ' ha sido eliminado.\n'
+                                            'mensaje' : '\n¡BOMBAAAAA!  El usuario ' + str(username) + ' ha sido eliminado.\n'
                                         }
                                         mensajeInicioP = pickle.dumps(mensajeInicio)
                                         for client in ROOMScon[port]:
