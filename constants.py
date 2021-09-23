@@ -1,3 +1,10 @@
+'''
+    File name: constantes.py
+    Author: Andrea Elías, Diego Estrada & Luis Urbina
+    Date created: 22/09/2021
+    Python Version: 3.7
+'''
+
 MENU = '''
             Tienes las siguientes opciones\n
             1. Iniciar la partida

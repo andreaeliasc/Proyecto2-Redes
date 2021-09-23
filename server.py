@@ -41,32 +41,17 @@ CARDGATOSANDIA = 11
 CARDGATOTACO = 12
 CARDGATOPAPA = 13
 
-#!/usr/bin/env python3
 
-# import socket
+"""
+    Crear y manejar unicamente una sala
 
-# HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-# PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
+    Arguments:
+        port - el número de puerto en el que queremos que se aloje la sala
+"""
 
-# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-#     s.bind((HOST, PORT))
-#     s.listen()
-#     conn, addr = s.accept()
-#     with conn:
-#         print('Connected by', addr)
-#         while True:
-#             data = conn.recv(1024)
-#             if not data:
-#                 break
-#             conn.sendall(data)
-
-
-### Funcion para el manejo y creacion de salas
-## Creamos el thread cuando se quiere de la creacion de una sala
 def thread_function1(port):
     banner = 0
     RPORT = port
-    #print(RPORT)
     r = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     r.bind((HOST, RPORT))
     print('starting to listen in Room', RPORT)
@@ -114,7 +99,16 @@ def thread_function1(port):
         thread_client.start()
         roomThreads.append(thread_client)
 
-##Funcion donde se definiran las opciones del juego.
+
+
+"""
+    Manejo de lógica de juego, interacciones entre jugadores y determinación del ganador
+
+    Arguments:
+        cli_sock - el socket del juego
+        port - puerto seleccionado
+        username - username en turno
+"""
 
 def game(cli_sock, port, username):
     global startGame
@@ -1066,9 +1060,15 @@ def game(cli_sock, port, username):
                 mensajeInicioP = pickle.dumps(mensajeInicio)
                 cli_sock.send(mensajeInicioP)
 
+"""
+    Mostrar mensaje (de tipo broadcast) enviado por un usuario en el chat
 
-
-
+    Arguments:
+        uname - username del usuario que envió el mensaje
+        cli_sock - el socket del juego
+        objeto - diccionario con el mensaje
+        port - puerto seleccionado
+"""
 def broadcast_usr(uname, cli_sock, objeto, port):
     try:
         data = objeto['mensaje']
@@ -1078,6 +1078,16 @@ def broadcast_usr(uname, cli_sock, objeto, port):
     except KeyError as e:
         raise KeyError(str(e) + ' Error')
 
+"""
+    Enviar un mensaje (de tipo broadcast) a los demás usuarios
+
+    Arguments:
+        uname - username del usuario que envió el mensaje
+        cs_sock - el socket que se está utilizando
+        sen_name - nombre del user que envía el mensaje
+        msg - string con el mensaje a enviar
+        port - puerto que se está utilizando
+"""
 def b_usr(cs_sock, sen_name, msg, port):
     for client in ROOMScon[port]:
         if client != cs_sock:

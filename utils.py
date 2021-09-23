@@ -26,6 +26,13 @@ Carta10="Gato4"
 Carta11="Salvacion"
 Carta12="Bomba"
 
+"""
+    Crea el mazo principal
+
+    Arguments:
+        none
+"""
+
 def MazoPrincipal():
     #Se agrega al mazo la carta "Va a ser que no"
     for i in range(5):
@@ -58,6 +65,15 @@ def MazoPrincipal():
     for i in range(4):
         Mazo.append(Carta10)
     return Mazo
+
+"""
+    Crea el mazo de los jugadores de manera aleatoria
+
+    Arguments:
+        Njugadores - el número de jugadores en la partida (2-4)
+        Mazo - el mazo de la partida
+"""
+
 def MazoJugadores(Njugadores,Mazo):
     rando=sample(Mazo,k=len(Mazo))
     #####################################Dos Jugadores#####################################################
@@ -92,6 +108,14 @@ def MazoJugadores(Njugadores,Mazo):
     rando=sample(rando,k=len(rando))
     return MP1,MP2,MP3,MP4,MP5,rando
 
+"""
+    Turnos
+
+    Arguments:
+        Njugadores - el número de jugadores en la partida (2-4)
+        MP[X] - mazo del jugador x
+        rando - número random
+"""
 def Turnos(Njugadores,MP1,MP2,MP3,MP4,MP5,rando):
     #####################################Dos Jugadores#####################################################
     if Njugadores=="2":
@@ -395,8 +419,3 @@ def Turnos(Njugadores,MP1,MP2,MP3,MP4,MP5,rando):
                 perdedor="P2"
                 fin=True
     return perdedor
-
-
-
-
-
