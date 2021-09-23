@@ -71,10 +71,10 @@ def send():
                         data_string = pickle.dumps(objeto)
                         cli_sock.send(data_string)
                         favor = int(input('''
-                            \nSi la carta es un favor o un gato elija el numero de Usuario a pedir la carta (si no lo es ingrese cualquier numero)  > 
+                            \nSi la carta es un favor o un gato elija el numero de Usuario a pedir la carta (Si la carta es de otro tipo, pon un número diferente)  > 
                         '''))
                         gatos = int(input('''
-                            \nSi la carta es un tipo de gato elija una de las siguientes opciones (si no lo es ingrese cualquier numero)
+                            \nSi la carta es un tipo de gato elija una de las siguientes opciones (Si la carta es de otro tipo, pon un número diferente)
                             \n1. Usar 2 gatos iguales
                             \n2. Usar 3 gatos iguales
                             \n> 
