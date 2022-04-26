@@ -2,7 +2,9 @@
     File name: client.py
     Author: Andrea Elías, Diego Estrada & Luis Urbina
     Date created: 10/09/2021
-    Python Version: 3.7
+    Python Version: 3.
+    Exploding Kittens
+    Proyecto 2 redes 
 '''
 
 from constants import INSTRUCCIONES, MENU
