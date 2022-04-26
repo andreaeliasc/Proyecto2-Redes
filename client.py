@@ -5,6 +5,7 @@
     Python Version: 3.
     Exploding Kittens
     Proyecto 2 redes 
+    Hola
 '''
 
 from constants import INSTRUCCIONES, MENU
@@ -22,7 +23,7 @@ CARDFAVOR = 4
 CARDSHUFFLE = 5
 CARDSEEFUTURE = 6
 CARDDEFUSE = 7
-CARDBOMB = 8
+CARDBOMB = 5
 
 """
     Enviar información de una jugada a través del socket
